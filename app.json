@@ -1,5 +1,5 @@
 {
-    "name": "Inflex Music Bot",
+    "name": "Animal Music Bot",
     "description": "A Telegram Music Player Bot, written in Python with Pyrogram and Py-Tgcalls.",
     "logo": "https://graph.org/file/d6a63fe91240f0b271f7f.jpg",
     "keywords": [
@@ -76,3 +76,4 @@
       ],
       "stack": "container"
   }
+
