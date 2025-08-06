@@ -8,7 +8,7 @@ from InflexMusic.utils import help_pannel
 from InflexMusic.utils.database import get_lang
 from InflexMusic.utils.decorators.language import LanguageStart, languageCB
 from InflexMusic.utils.inline.help import help_back_markup, private_help_panel
-from config import BANNED_USERS, START_IMG_URL, SUPPORT_GROUP
+from config import BANNED_USERS, HELP_IMG_URL, SUPPORT_GROUP
 from strings import get_string, helpers
 
 
@@ -38,14 +38,11 @@ async def helper_private(
         language = await get_lang(update.chat.id)
         _ = get_string(language)
         keyboard = help_pannel(_)
-        await client.send_photo(
-            chat_id=update.chat.id,
-            photo=random.choice(START_IMG_URL),  # Picks a random URL from your list
+        await update.reply_photo(
+            photo=HELP_IMG_URL,
             caption=_["help_1"].format(SUPPORT_GROUP),
             reply_markup=keyboard,
         )
-
-
 
 
 @app.on_message(filters.command(["help"]) & filters.group & ~BANNED_USERS)
@@ -91,6 +88,3 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_14, reply_markup=keyboard)
     elif cb == "hb15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
-
-
-
