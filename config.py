@@ -1,4 +1,5 @@
 import re
+import os
 import random
 from os import getenv
 
@@ -176,6 +177,7 @@ if SUPPORT_GROUP:
         raise SystemExit(
             "[ERROR] - Your SUPPORT_GROUP url is wrong. Please ensure that it starts with https://"
         )
+
 
 
 
