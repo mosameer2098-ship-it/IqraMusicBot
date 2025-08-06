@@ -38,11 +38,13 @@ async def helper_private(
         language = await get_lang(update.chat.id)
         _ = get_string(language)
         keyboard = help_pannel(_)
-        await update.reply_photo(
+        await client.send_photo(
+            chat_id=update.chat.id,
             photo=START_IMG_URL,
             caption=_["help_1"].format(SUPPORT_GROUP),
             reply_markup=keyboard,
         )
+
 
 
 @app.on_message(filters.command(["help"]) & filters.group & ~BANNED_USERS)
@@ -88,3 +90,4 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_14, reply_markup=keyboard)
     elif cb == "hb15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
+
