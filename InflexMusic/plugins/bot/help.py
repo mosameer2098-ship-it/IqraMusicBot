@@ -40,10 +40,11 @@ async def helper_private(
         keyboard = help_pannel(_)
         await client.send_photo(
             chat_id=update.chat.id,
-            photo=START_IMG_URL,
+            photo=str(START_IMG_URL),
             caption=_["help_1"].format(SUPPORT_GROUP),
             reply_markup=keyboard,
         )
+
 
 
 
@@ -90,4 +91,5 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_14, reply_markup=keyboard)
     elif cb == "hb15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
+
 
