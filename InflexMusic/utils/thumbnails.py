@@ -49,16 +49,13 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     
     img = img.resize((output_size - 2*border, output_size - 2*border))
     
-    
     final_img = Image.new("RGBA", (output_size, output_size), "white")
-    
     
     mask_main = Image.new("L", (output_size - 2*border, output_size - 2*border), 0)
     draw_main = ImageDraw.Draw(mask_main)
     draw_main.ellipse((0, 0, output_size - 2*border, output_size - 2*border), fill=255)
     
     final_img.paste(img, (border, border), mask_main)
-    
     
     mask_border = Image.new("L", (output_size, output_size), 0)
     draw_border = ImageDraw.Draw(mask_border)
@@ -68,34 +65,47 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     
     return result
 
-
-
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
         return f"cache/{videoid}_v4.png"
 
     url = f"https://www.youtube.com/watch?v={videoid}"
-    results = VideosSearch(url, limit=1)
-    for result in (await results.next())["result"]:
-        try:
-            title = result["title"]
-            title = re.sub("\W+", " ", title)
-            title = title.title()
-        except:
-            title = "Unsupported Title"
-        try:
-            duration = result["duration"]
-        except:
-            duration = "Unknown Mins"
-        thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-        try:
-            views = result["viewCount"]["short"]
-        except:
-            views = "Unknown Views"
-        try:
-            channel = result["channel"]["name"]
-        except:
-            channel = "Unknown Channel"
+    
+    title = "Unsupported Title"
+    duration = "Unknown Mins"
+    views = "Unknown Views"
+    channel = "Unknown Channel"
+    thumbnail = YOUTUBE_IMG_URL
+
+    try:
+        results = VideosSearch(url, limit=1)
+        search_result = await results.next()
+        if search_result and "result" in search_result and len(search_result["result"]) > 0:
+            result = search_result["result"][0]
+            try:
+                title = result["title"]
+                title = re.sub("\W+", " ", title)
+                title = title.title()
+            except:
+                pass
+            try:
+                duration = result["duration"]
+            except:
+                pass
+            try:
+                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+            except:
+                pass
+            try:
+                views = result["viewCount"]["short"]
+            except:
+                pass
+            try:
+                channel = result["channel"]["name"]
+            except:
+                pass
+    except Exception as e:
+        print(f"Thumb Error: {e}")
 
     async with aiohttp.ClientSession() as session:
         async with session.get(thumbnail) as resp:
@@ -103,6 +113,9 @@ async def get_thumb(videoid):
                 f = await aiofiles.open(f"cache/thumb{videoid}.png", mode="wb")
                 await f.write(await resp.read())
                 await f.close()
+
+    if not os.path.isfile(f"cache/thumb{videoid}.png"):
+        return YOUTUBE_IMG_URL
 
     youtube = Image.open(f"cache/thumb{videoid}.png")
     image1 = changeImageSize(1280, 720, youtube)
@@ -115,7 +128,6 @@ async def get_thumb(videoid):
     font = ImageFont.truetype("InflexMusic/assets/font.ttf", 30)
     title_font = ImageFont.truetype("InflexMusic/assets/font3.ttf", 45)
 
-
     circle_thumbnail = crop_center_circle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
@@ -126,26 +138,20 @@ async def get_thumb(videoid):
     title1 = truncate(title)
     draw.text((text_x_position, 180), title1[0], fill=(255, 255, 255), font=title_font)
     draw.text((text_x_position, 230), title1[1], fill=(255, 255, 255), font=title_font)
-    draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
+    draw.text((text_x_position, 320), f"{channel}  |  {views}", (255, 255, 255), font=arial)
 
-    
     line_length = 580  
-
-    
     red_length = int(line_length * 0.6)
     white_length = line_length - red_length
 
-    
     start_point_red = (text_x_position, 380)
     end_point_red = (text_x_position + red_length, 380)
     draw.line([start_point_red, end_point_red], fill="red", width=9)
 
-    
     start_point_white = (text_x_position + red_length, 380)
     end_point_white = (text_x_position + line_length, 380)
     draw.line([start_point_white, end_point_white], fill="white", width=8)
 
-    
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
