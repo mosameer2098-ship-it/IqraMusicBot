@@ -3,6 +3,7 @@ import os
 import re
 import json
 from typing import Union
+from pathlib import Path
 
 import yt_dlp
 from pyrogram.enums import MessageEntityType
@@ -12,20 +13,37 @@ from youtubesearchpython.__future__ import VideosSearch
 from InflexMusic.utils.database import is_on_off
 from InflexMusic.utils.formatters import time_to_seconds
 
-
-
-import os
 import glob
 import random
+import base64
+
+
+def setup_youtube_cookies():
+    encoded = os.getenv("YOUTUBE_COOKIES_B64")
+
+    if encoded:
+        os.makedirs("cookies", exist_ok=True)
+        try:
+            cookie_data = base64.b64decode(encoded)
+            with open("cookies/cookies.txt", "wb") as f:
+                f.write(cookie_data)
+            print("YouTube cookies loaded successfully.")
+        except Exception as e:
+            print(f"Failed to load YouTube cookies: {e}")
+
+
+setup_youtube_cookies()
 
 
 def cookie_txt_file():
     folder_path = f"{os.getcwd()}/cookies"
-    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
+    txt_files = glob.glob(os.path.join(folder_path, "*.txt"))
+
     if not txt_files:
         raise FileNotFoundError("No .txt files found in the specified folder.")
-    cookie_txt_file = random.choice(txt_files)
-    return f"""cookies/{str(cookie_txt_file).split("/")[-1]}"""
+
+    cookie_file = random.choice(txt_files)
+    return f"cookies/{Path(cookie_file).name}"
 
 
 
@@ -230,7 +248,10 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        ytdl_opts = {"quiet": True}
+        ytdl_opts = {
+            "quiet": True,
+            "cookiefile": cookie_txt_file(),
+        }
         ydl = yt_dlp.YoutubeDL(ytdl_opts)
         with ydl:
             formats_available = []
@@ -301,6 +322,7 @@ class YouTubeAPI:
                 "nocheckcertificate": True,
                 "quiet": True,
                 "no_warnings": True,
+                "cookiefile": cookie_txt_file(),
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             info = x.extract_info(link, False)
@@ -318,6 +340,7 @@ class YouTubeAPI:
                 "nocheckcertificate": True,
                 "quiet": True,
                 "no_warnings": True,
+                "cookiefile": cookie_txt_file(),
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             info = x.extract_info(link, False)
@@ -339,6 +362,7 @@ class YouTubeAPI:
                 "no_warnings": True,
                 "prefer_ffmpeg": True,
                 "merge_output_format": "mp4",
+                "cookiefile": cookie_txt_file(),
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             x.download([link])
@@ -353,6 +377,7 @@ class YouTubeAPI:
                 "quiet": True,
                 "no_warnings": True,
                 "prefer_ffmpeg": True,
+                "cookiefile": cookie_txt_file(),
                 "postprocessors": [
                     {
                         "key": "FFmpegExtractAudio",
