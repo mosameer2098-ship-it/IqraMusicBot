@@ -90,11 +90,11 @@ async def shell_cmd(cmd):
     )
     out, errorz = await proc.communicate()
     if errorz:
-        if "unavailable videos are hidden" in (errorz.decode("utf-8")).lower():
-            return out.decode("utf-8")
+        if "unavailable videos are hidden" in (errorz.decode("utf-8", "replace")).lower():
+            return out.decode("utf-8", "replace")
         else:
-            return errorz.decode("utf-8")
-    return out.decode("utf-8")
+            return errorz.decode("utf-8", "replace")
+    return out.decode("utf-8", "replace")
 
 
 class YouTubeAPI:
