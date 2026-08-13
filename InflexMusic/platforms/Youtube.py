@@ -59,9 +59,9 @@ async def check_file_size(link):
         )
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
-            print(f'Error:\n{stderr.decode()}')
+            print(f'Error:\n{stderr.decode("utf-8", "replace")}')
             return None
-        return json.loads(stdout.decode())
+        return json.loads(stdout.decode("utf-8", "replace"))
 
     def parse_size(formats):
         total_size = 0
@@ -201,9 +201,9 @@ class YouTubeAPI:
         )
         stdout, stderr = await proc.communicate()
         if stdout:
-            return 1, stdout.decode().split("\n")[0]
+            return 1, stdout.decode("utf-8", "replace").split("\n")[0]
         else:
-            return 0, stderr.decode()
+            return 0, stderr.decode("utf-8", "replace")
 
     async def playlist(self, link, limit, user_id, videoid: Union[bool, str] = None):
         if videoid:
@@ -414,7 +414,7 @@ class YouTubeAPI:
                 )
                 stdout, stderr = await proc.communicate()
                 if stdout:
-                    downloaded_file = stdout.decode().split("\n")[0]
+                    downloaded_file = stdout.decode("utf-8", "replace").split("\n")[0]
                     direct = False
                 else:
                    file_size = await check_file_size(link)
