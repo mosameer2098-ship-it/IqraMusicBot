@@ -168,7 +168,7 @@ async def shellrunner(_, message: Message):
             except Exception as err:
                 await edit_or_reply(message, text=f"<b>ERROR :</b>\n<pre>{err}</pre>")
             output += f"<b>{code}</b>\n"
-            output += process.stdout.read()[:-1].decode("utf-8")
+            output += process.stdout.read()[:-1].decode("utf-8", "replace")
             output += "\n"
     else:
         shell = re.split(""" (?=(?:[^'"]|'[^']*'|"[^"]*")*$)""", text)
@@ -191,7 +191,7 @@ async def shellrunner(_, message: Message):
             return await edit_or_reply(
                 message, text=f"<b>ERROR :</b>\n<pre>{''.join(errors)}</pre>"
             )
-        output = process.stdout.read()[:-1].decode("utf-8")
+        output = process.stdout.read()[:-1].decode("utf-8", "replace")
     if str(output) == "\n":
         output = None
     if output:
