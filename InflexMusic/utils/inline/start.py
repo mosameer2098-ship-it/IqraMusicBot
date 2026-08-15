@@ -74,7 +74,13 @@ def help_pannel(_):
                 text=_["S_B_2"],
                 url=config.SUPPORT_GROUP,
             )
-        ]
+        ],
+        [
+            InlineKeyboardButton(
+                text="📢 Promote With AdsNova",
+                url="https://t.me/Automatic_posttbot",
+            )
+        ],
     ]
 
     return buttons
