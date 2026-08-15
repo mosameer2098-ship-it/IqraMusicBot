@@ -44,6 +44,12 @@ def private_panel(_):
         ],
         [
             InlineKeyboardButton(
+                text="📢 Post Bot",
+                url="https://t.me/Automatic_posttbot",
+            )
+        ],
+        [
+            InlineKeyboardButton(
                 text=_["S_B_6"],
                 url="https://t.me/AdsNovaPro_Official",
             ),
