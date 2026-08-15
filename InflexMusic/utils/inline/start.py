@@ -45,7 +45,7 @@ def private_panel(_):
         [
             InlineKeyboardButton(
                 text=_["S_B_6"],
-                url=config.SUPPORT_CHANNEL,
+                url="https://t.me/AdsNova0",
             ),
             InlineKeyboardButton(
                 text=_["S_B_2"],
@@ -55,11 +55,11 @@ def private_panel(_):
         [
             InlineKeyboardButton(
                 text=_["S_B_5"],
-                url=f"tg://user?id={config.OWNER_ID}",
+                url="https://t.me/AdsNova0",
             ),
             InlineKeyboardButton(
                 text=_["S_B_7"],
-                url=config.SUPPORT_CHANNEL,
+                url="https://t.me/AdsNova0",
             ),
         ],
     ]
