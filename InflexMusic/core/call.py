@@ -274,7 +274,6 @@ class Call(PyTgCalls):
         await assistant.join_group_call(
             config.LOG_GROUP_ID,
             AudioVideoPiped(link),
-            stream_type=StreamType().pulse_stream,
         )
         await asyncio.sleep(0.2)
         await assistant.leave_group_call(config.LOG_GROUP_ID)
@@ -310,7 +309,6 @@ class Call(PyTgCalls):
             await assistant.join_group_call(
                 chat_id,
                 stream,
-                stream_type=StreamType().pulse_stream,
             )
         except NoActiveGroupCall:
             raise AssistantErr(_["call_8"])
