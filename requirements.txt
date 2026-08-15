@@ -24,3 +24,4 @@ yt-dlp[default]>=2026.7.4
 youtube-search
 youtube-search-python
 py-tgcalls==1.1.6
+ntgcalls==1.1.3
